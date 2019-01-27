@@ -7,10 +7,10 @@ Then organize the dataset into emotion categories:
 `$ python organize_dataset.py`
 
 This creates individual directories for each emotion:
-*neutral
-*anger
-*contempt
-*disgust
-*fear
-*happy
-*surprise
+* neutral
+* anger
+* contempt
+* disgust
+* fear
+* happy
+* surprise
