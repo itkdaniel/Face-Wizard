@@ -4,7 +4,7 @@ A CMPS140 Artificial Intelligence Project
 To get the dataset refer to **get_dataset_README**.  
 
 ## Unzip the dataset
-Download the Emotion_labels, extended-cohn-kanade-images, and FACS_labels zipped archives.  
+Download the Emotion_labels, extended-cohn-kanade-images, and FACS_labels zipped archives from the **CK+** directory.    
 
 Move `Emotion_labels` `extended-cohn-kanade-images` and `FACS_labels` into project root directory (i.e. same directory as **organize_dataset.py**)  
 
