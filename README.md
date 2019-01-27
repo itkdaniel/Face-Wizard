@@ -15,7 +15,7 @@ To organize the dataset into emotion categories:
 
 `$ python organize_dataset.py`
 
-This creates individual directories for each emotion:
+This will organize and sort images from the dataset into separate folders by emotion:
 * neutral
 * anger
 * contempt
