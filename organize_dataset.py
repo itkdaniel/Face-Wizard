@@ -24,7 +24,7 @@ class CategorizeImages(object):
     def get_category_images(self, path):
         folders = []
         files = []
-        neutral = anger = contempt = disgust = fear = happy = sadness = surprise = []
+        # neutral = anger = contempt = disgust = fear = happy = sadness = surprise = []
         # emotion_list = ["neutral", "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
         emotion_hash = {"neutral": [],"anger": [],"contempt": [], "disgust": [], "fear": [], "happy": [], "sadness": [], "surprise": []}
         for dir in os.scandir(path):
@@ -36,8 +36,8 @@ class CategorizeImages(object):
                         files.append(emotion.name)
                         file = open(image.path + "\\" + emotion.name, "r")
                         emotion_code = file.read()
-                        print("emotion code: ", float(emotion_code), "\nfilename: ", emotion.name)
-                        print()
+                        # print("emotion code: ", float(emotion_code), "\nfilename: ", emotion.name)
+                        # print()
                         if float(emotion_code) == 0.0:
                             emotion_hash["neutral"].append(emotion.name)
                             # neutral.append(emotion.name)
@@ -66,11 +66,10 @@ class CategorizeImages(object):
 
     def categorize_images(self, path, emotion, emotion_hash):
         emotion_img_list = emotion_hash[emotion]
-        print("\nemotion_img_list: ", emotion_img_list)
+        # print("\nemotion_img_list: ", emotion_img_list)
         emotion_folder = os.getcwd() + "\\" + emotion
-        print("\nemotion folder: ", emotion_folder)
-        print("\ncurrent directory: ", os.getcwd())
-
+        # print("\nemotion folder: ", emotion_folder)
+        # print("\ncurrent directory: ", os.getcwd())
         path_dest = emotion
 
         if not os.path.exists(emotion):
@@ -78,20 +77,14 @@ class CategorizeImages(object):
 
         for img in emotion_img_list:
             temp = img.split("_")
-            print("\ntemp: ", temp)
 
             path_src = "{}\\{}\\{}\\{}_{}_{}.png".format(path, temp[0], temp[1], temp[0], temp[1], temp[2])
-            print("path_src: ", path_src)
 
             dest_check_img_exist = "{}\\{}_{}_{}.png".format(emotion, temp[0], temp[1], temp[2])
             img_path_exists = Path(dest_check_img_exist)
 
             if not img_path_exists.exists():
                 shutil.copy(path_src, path_dest)
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -101,12 +94,6 @@ if __name__ == "__main__":
 
     ImageCategorizer = CategorizeImages()
     folders, files, emotion_hash = ImageCategorizer.get_category_images(emotion_label_path)
-    # print("Folders: \n", folders)
-    # print("\n\nFiles: \n", files)
-    # for file in files:
-        # print("\n\n File: ", file)
-    for key, val in emotion_hash.items():
-        print("\n\ncode: ", key, "\nimages: \n", val)
 
     total_labeled_images = 0
     for emotion in emotion_list:
