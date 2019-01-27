@@ -1,4 +1,4 @@
-# Face-Wizard
+# Face Wizard
 A CMPS140 Artificial Intelligence Project
 # Getting Started
 To get the dataset refer to **get_dataset_README**.  
