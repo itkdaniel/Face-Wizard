@@ -30,7 +30,7 @@ Michael Lau
 Daniel Truong  
 
 ## Datasets
-* http://www.kasrl.org/jaffe.html
-* http://cvit.iiit.ac.in/projects/IMFDB/
-* http://www.pitt.edu/~emotion/ck-spread.htm
+* [The Japanese Female Facial Expression (JAFFE) Database](http://www.kasrl.org/jaffe.html)
+* [Indian Movie Face Database (IMFDB)](http://cvit.iiit.ac.in/projects/IMFDB/)
+* [Cohn-Kanade AU-Coded Expression Database](http://www.pitt.edu/~emotion/ck-spread.htm)
 
