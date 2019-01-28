@@ -28,3 +28,9 @@ This will organize and sort images from the dataset into separate folders by emo
 Ruiwen Liang  
 Michael Lau  
 Daniel Truong  
+
+### Datasets
+* http://www.kasrl.org/jaffe.html
+* http://cvit.iiit.ac.in/projects/IMFDB/
+* http://www.pitt.edu/~emotion/ck-spread.htm
+
