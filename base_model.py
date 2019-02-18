@@ -6,6 +6,7 @@ from keras.layers.core import Activation
 from keras.layers.core import Flatten
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
+from keras.optimizers import Adam
 from keras import backend
 
 # SmallerVGGNet Model
@@ -15,49 +16,49 @@ class BaseModel:
         in_shape = (height, width, depth)
         chan_dim = -1
 
-        if backend.image_date_format() == "channels_first":
+        if backend.image_data_format() == "channels_first":
             in_shape = (depth, height, width)
             chan_dim = 1
 
         model.add(Conv2D(64, (3,3), input_shape=in_shape))
-        mode.add(Activation("relu"))
-        model.add(MaxPooling2d(pool_size=(3,3))) # to prevent over-fitting
+        model.add(Activation("relu"))
+        model.add(MaxPooling2D(pool_size=(3,3))) # to prevent over-fitting
         model.add(Flatten())
-        mode.add(Dense(classes))
+        model.add(Dense(classes))
         model.add(Activation(finalAct))
 
-        # CONV -> RELU -> POOL
+        # # CONV -> RELU -> POOL
         # model.add(Conv2D(32, (3, 3), padding="same", input_shape=in_shape))
         # model.add(Activation("relu"))
         # model.add(BatchNormalization(axis=chan_dim))
         # model.add(MaxPooling2D(pool_size=(3, 3)))
         # model.add(Dropout(0.25))
-        #
+#
         # # (CONV -> RELU) * 2 -> POOL
         # model.add(Conv2D(64, (3, 3), padding="same"))
         # model.add(Activation("relu"))
         # model.add(BatchNormalization(axis=chan_dim))
-        # model.add(Conv2d(64, (3,3 ), padding="same"))
+        # model.add(Conv2D(64, (3,3 ), padding="same"))
         # model.add(Activation("relu"))
         # model.add(BatchNormalization(axis=chan_dim))
-        # model.add(MaxPooling2D(pool_size(2, 2)))
+        # model.add(MaxPooling2D(pool_size=(2, 2)))
         # model.add(Dropout(0.25))
         #
         # # (CONV -> RELU) * 2 -> POOL
         # model.add(Conv2D(128, (3, 3), padding="same"))
         # model.add(Activation("relu"))
         # model.add(BatchNormalization(axis=chan_dim))
-        # model.add(Conv2d(128, (3,3 ), padding="same"))
+        # model.add(Conv2D(128, (3,3 ), padding="same"))
         # model.add(Activation("relu"))
         # model.add(BatchNormalization(axis=chan_dim))
-        # model.add(MaxPooling2D(pool_size(2, 2)))
+        # model.add(MaxPooling2D(pool_size=(2, 2)))
         # model.add(Dropout(0.25))
         #
         # # FC -> RELU
         # # Fully connected layers specified by Dense
         # model.add(Flatten())
         # model.add(Dense(1024))
-        # mode.add(Activation("relu"))
+        # model.add(Activation("relu"))
         # model.add(BatchNormalization())
         # model.add(Dropout(0.5))
         #
@@ -66,6 +67,7 @@ class BaseModel:
         # model.add(Dense(classes))
         # model.add(Activation(finalAct))
 
+        # opt = Adam(lr=0.5, decay=0.5/3)
         # Configure learning process via the compile method
         model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
