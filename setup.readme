@@ -1,3 +1,4 @@
+0. Uncompress the Manually_Annotated and Manually_Annotated_file_lists zip files
 1. Put Manually_Annotated folder into main directory
 2. Put training and validation csv files into main directory
 3. Run python organize_affectdb.py -b to build {emotion:List[images]} hash pickle files
