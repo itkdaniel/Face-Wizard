@@ -5,11 +5,11 @@ To get the datasets refer to the [Datasets](#Datasets) section of this document.
 
 ## Affectnet Dataset
 ### Unzip the dataset
-Request access to [Affectnet Dataset](#Datasets) and download the Manually Annotated zip file. 
+Request access to [Affectnet Dataset](#Datasets) and download the Manually_Annotated and Manually_Annotated_file_lists zip files. 
 
-The zip file contains the manually annotated images and csv files for training and validation sets in their corresponding directories. 
+The zip file contains the manually annotated images and csv files for training and validation sets. 
 
-Uncompress the zip file and put the Manually_Annotated folder, training.csv file, and validation.csv file into the root project directory.
+Uncompress the zip files and put the Manually_Annotated folder, training.csv file, and validation.csv file into the root project directory.
 
 ### Setup Affectnet Dataset
 1. Build the emotion:List[images] hash pickle files  
