@@ -48,17 +48,6 @@ def process_data(path, emotion):
         labels = []
         print("Processing ", path, "...")
         emotion_path = "{}/{}".format(path, emotion)
-        # for dir in os.scandir(training_path):
-        #     print(dir.name)
-        #     for img in os.scandir(dir.path):
-        #         # print(img.name)
-        #         image = cv2.imread(img.path)
-        #         image = cv2.resize(image, (img_width, img_height))
-        #         image = img_to_array(image)
-        #         data.append(image)
-        #
-        #         label = dir.name
-        #         labels.append(label)
 
         for img in os.scandir(emotion_path):
             print(img.name)
@@ -71,6 +60,8 @@ def process_data(path, emotion):
 
             labels.append(emotion)
             # print(img.name)
+
+            # Convert data and labels to np arrays
     except:
         print("Error processing training data")
         return False
@@ -278,52 +269,14 @@ if __name__ == "__main__":
     img_width = 100
     img_height = 100
 
-        # if not os.path.exists(training_hash):
-        #     print("\nbuilding training hash . . .")
-        #     training_emotion_hash = db_org.get_emotion_folders(images_path, csv_training_file)
-        #     training_emotion_hash_pickle = open(training_hash, 'wb')
-        #     pickle.dump(training_emotion_hash, training_emotion_hash_pickle)
-        #     training_emotion_hash_pickle.close()
-        # else:
-        #     print("\nloading training hash pickle. . .")
-        #     training_emotion_hash_pickle = open(training_hash, 'rb')
-        #     training_emotion_hash = pickle.load(training_emotion_hash_pickle)
-
-
     """
         Process Training Images In Batches of 5k
     """
     # process_train_data("training_set_imgs", "happiness")
 
     # CREATE/ADD TO VALID PICKLE FILE
-    """create_add_to_pickles(emotion)"""
     # emotion = "contempt"
-
-        # VALIDATION SET
-    # valid_data, valid_labels = process_data(validation_path, emotion, valid_data, valid_labels)
-    # print("processed training: ",emotion, "\n", "data: ", len(valid_data), "\n"
-    #         "labels: ", len(valid_labels))
-    #
-    # valid_data_pickle = open("valid_data_pickle", 'wb')
-    # pickle.dump(valid_data, valid_data_pickle)
-    # valid_data_pickle.close()
-    #
-    # valid_label_pickle = open("valid_label_pickle", 'wb')
-    # pickle.dump(valid_labels, valid_label_pickle)
-    # valid_label_pickle.close()
-
-        # TRAINING SET
-    # train_data, train_labels = process_data(training_path, emotion, train_data, train_labels)
-    # print("processed training: ",emotion, "\n", "data: ", len(train_data), "\n"
-    #         "labels: ", len(train_labels))
-    #
-    # train_data_pickle = open("train_data_pickle", 'wb')
-    # pickle.dump(train_data, train_data_pickle)
-    # train_data_pickle.close()
-    #
-    # train_label_pickle = open("train_label_pickle", 'wb')
-    # pickle.dump(train_labels, train_label_pickle)
-    # train_label_pickle.close()
+    """create_add_to_pickles(emotion)"""
 
     # LOAD/READ FROM VALID PICKLE FILE
 
@@ -334,28 +287,6 @@ if __name__ == "__main__":
     train_label_pickle = "train_label_pickle"
     load_read_pickles(valid_pickle, valid_label_pickle, train_pickle, train_label_pickle)
 
-
-        # VALIDATION SET
-    # valid_pickle = "valid_data_pickle"
-    # valid_data_pickle_load = open(valid_pickle, 'rb')
-    # valid_data = pickle.load(valid_data_pickle_load)
-    # print("# valid data pickle entries: ", len(valid_data))
-    #
-    # valid_label_pickle = "valid_label_pickle"
-    # valid_label_pickle_load = open(valid_label_pickle, 'rb')
-    # valid_labels = pickle.load(valid_label_pickle_load)
-    # print("# valid label pickle entries: ", len(valid_labels))
-
-        # TRAINING SET
-    # train_pickle = "train_data_pickle"
-    # train_data_pickle_load = open(train_pickle, 'rb')
-    # train_data = pickle.load(train_data_pickle_load)
-    # print("# train data pickle entries: ", len(train_data))
-    #
-    # train_label_pickle = "train_label_pickle"
-    # train_label_pickle_load = open(train_label_pickle, 'rb')
-    # train_labels = pickle.load(train_label_pickle_load)
-    # print("# train label pickle entries: ", len(train_labels))
 
     # APPEND TO VALID PICKLE
     # emotions = ["anger24882_X", "contempt3750_X", "disgust3803_X", "fear6378_X", "happiness+134416",
@@ -373,58 +304,3 @@ if __name__ == "__main__":
 
     # append_to_pickle(training_path, emotion, train_pickle, train_label_pickle)
     # append_to_pickle(validation_path, emotion, valid_pickle, valid_label_pickle)
-
-
-        # VALIDATION SET
-    # valid_data, valid_labels = process_data(validation_path, emotion, valid_data, valid_labels)
-    # print("processed training: ",emotion, "\n", "data: ", len(valid_data), "\n",
-    #         "labels: ", len(valid_labels))
-    #
-    # valid_pickle = "valid_data_pickle"
-    # valid_data_pickle_load = open(valid_pickle, 'rb')
-    # valid_data_pickle = pickle.load(valid_data_pickle_load)
-    # valid_data_pickle += valid_data
-    #
-    # valid_data_pickle_file = open("valid_data_pickle", 'wb')
-    # pickle.dump(valid_data_pickle, valid_data_pickle_file)
-    # valid_data_pickle_file.close()
-    #
-    # valid_label_pickle = "valid_label_pickle"
-    # valid_label_pickle_load = open(valid_label_pickle, 'rb')
-    # valid_label_pickle = pickle.load(valid_label_pickle_load)
-    # valid_label_pickle += valid_labels
-    # valid_label_pickle_load.close()
-    #
-    # valid_label_pickle_file = open("valid_label_pickle", 'wb')
-    # pickle.dump(valid_label_pickle, valid_label_pickle_file)
-    # valid_label_pickle_file.close()
-
-        # TRAINING SET
-    # train_data, train_labels = process_data(training_path, emotion, train_data, train_labels)
-    # print("processed training: ",emotion, "\n", "data: ", len(train_data), "\n"
-    #         "labels: ", len(train_labels))
-    #
-    # train_pickle = "train_data_pickle"
-    # train_data_pickle_load = open(train_pickle, 'rb')
-    # train_data_pickle = pickle.load(train_data_pickle_load)
-    # train_data_pickle += train_data
-    #
-    # train_data_pickle_file = open("train_data_pickle", 'wb')
-    # pickle.dump(train_data_pickle, train_data_pickle_file)
-    # train_data_pickle_file.close()
-    #
-    # train_label_pickle = "train_label_pickle"
-    # train_label_pickle_load = open(train_label_pickle, 'rb')
-    # train_label_pickle = pickle.load(train_label_pickle_load)
-    # train_label_pickle += train_labels
-    # train_label_pickle_load.close()
-    #
-    # train_label_pickle_file = open("train_label_pickle", 'wb')
-    # pickle.dump(train_label_pickle, train_label_pickle_file)
-    # train_label_pickle_file.close()
-
-
-
-    # valid_data, valid_labels = process_data(validation_path, valid_data, valid_labels)
-    # print("processed validation: \n", "data: ", len(valid_data), "\n"
-            # "labels: ", len(valid_labels))

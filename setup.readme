@@ -1,0 +1,5 @@
+1. Put Manually_Annotated folder into main directory
+2. Put training and validation csv files into main directory
+3. Run python organize_affectdb.py -b to build {emotion:List[images]} hash pickle files
+4. Run python organize_affectdb.py -o validation_set to organize validation set images
+5. Run python organize_affectdb.py -o training_set to organize training set images

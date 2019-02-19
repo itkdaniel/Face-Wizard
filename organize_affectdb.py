@@ -1,9 +1,11 @@
 from pathlib import Path
 import os, os.path
 import datetime
+import argparse
 import shutil
 import pickle
 import time
+import sys
 import csv
 
 """
@@ -149,82 +151,102 @@ if __name__ == "__main__":
     training_emotion_hash = {}
     validation_hash = "validation_emotion_hash_pickle"
     training_hash = "training_emotion_hash_pickle"
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-b", "--build_hash", help="build train/valid {emotion:file} hash", action="store_true")
+    parser.add_argument("-o", "--organize", help="organize affectnet dataset: training_set_imgs/validation_set_imgs")
+    # parser.add_argument()
+    args = parser.parse_args()
     print("processing dataset . . .")
     # start = time.time()
     start = datetime.datetime.now()
     # print(start)
     db_org = DataOrganizer()
-    # TODO: use pickle to save emotion_hash
+
+    if (len(sys.argv) <= 1):
+        print("** Error: Required Arguments: {-b:--buildhash} or {-o:--organize}")
+    # Uses pickle to save emotion_hash
     #       so we don't need to compute the hash everytime
     # emotion_hash = db_org.get_emotion_folders(images_path, csv_training_file)
-    if not os.path.exists(validation_hash):
-        print("\nbuilding validation hash . . .")
-        validation_emotion_hash = db_org.get_emotion_folders(images_path, csv_validation_file)
-        validation_emotion_hash_pickle = open(validation_hash, 'wb')
-        pickle.dump(validation_emotion_hash, validation_emotion_hash_pickle)
-        validation_emotion_hash_pickle.close()
-    else:
-        validation_emotion_hash_pickle = open(validation_hash, 'rb')
-        validation_emotion_hash = pickle.load(validation_emotion_hash_pickle)
-        print("\nloaded validation hash pickle . . .")
-    # for key, val in validation_emotion_hash.items():
-        # print("\n\nkey: \n", key)
-        # print("emotion img list:\n", val)
 
-    num_total_imgs = 0
-    for key, val in validation_emotion_hash.items():
-        # print("\n\nemotion: ", key)
-        # print("image list len: ", len(val))
-        num_total_imgs += len(val)
+    # Build {Emotion:List[images]} hash pickles
+    if args.build_hash:
+        if not os.path.exists(validation_hash):
+            print("\nbuilding validation hash . . .")
+            validation_emotion_hash = db_org.get_emotion_folders(images_path, csv_validation_file)
+            validation_emotion_hash_pickle = open(validation_hash, 'wb')
+            pickle.dump(validation_emotion_hash, validation_emotion_hash_pickle)
+            validation_emotion_hash_pickle.close()
+        else:
+            validation_emotion_hash_pickle = open(validation_hash, 'rb')
+            validation_emotion_hash = pickle.load(validation_emotion_hash_pickle)
+            print("\nloaded validation hash pickle . . .")
+            num_total_imgs = 0
+            for key, val in validation_emotion_hash.items():
+                print("\n\nemotion: ", key)
+                print("image list len: ", len(val))
+                num_total_imgs += len(val)
+            print("Total num validation images: ", num_total_imgs)
 
-    print("Total num validation images: ", num_total_imgs)
+        if not os.path.exists(training_hash):
+            print("\nbuilding training hash . . .")
+            training_emotion_hash = db_org.get_emotion_folders(images_path, csv_training_file)
+            training_emotion_hash_pickle = open(training_hash, 'wb')
+            pickle.dump(training_emotion_hash, training_emotion_hash_pickle)
+            training_emotion_hash_pickle.close()
+        else:
+            print("\nloading training hash pickle. . .")
+            training_emotion_hash_pickle = open(training_hash, 'rb')
+            training_emotion_hash = pickle.load(training_emotion_hash_pickle)
+            print("\nloaded training hash pickle . . .")
+            num_total_training_imgs = 0
+            for key, val in training_emotion_hash.items():
+                print("\n\nemotion: ", key)
+                print("image list len: ", len(val))
+                num_total_training_imgs += len(val)
+            print("Total num training images: ", num_total_training_imgs)
 
     # organize training set
-    # move_imgs = 0
-    # print("\n\norganizing dataset . . .")
-    # for emotion in emotions:
-        # print("\norganizing emotion:", emotion)
-        # move_imgs = db_org.get_training_set(validation_path, emotion, emotion_hash)
-        # print("Total imgs moved: ", move_imgs)
+    if args.organize:
+        total_moved = 0
+        move_imgs = 0
+        emotion_hash = {}
 
-    # print("\n\nTotal num images: ", num_total_imgs)
+        # If folder exists: print(already exists)
+        if (os.path.exists(args.organize)):
+            # Delete the folder
+            print(args.organize, " already exists")
+        else:
+            # organize the image set
+            print("\n\norganizing dataset . . .")
+            for emotion in emotions:
+                print("\norganizing emotion:", emotion)
+                # move_imgs = db_org.get_training_set(validation_path, emotion, emotion_hash)
+                if (args.organize == "training_set"):
+                    training_emotion_hash_pickle = open(training_hash, 'rb')
+                    # training_emotion_hash = pickle.load(training_emotion_hash_pickle)
+                    emotion_hash = pickle.load(training_emotion_hash_pickle)
+                    print("\nloaded training hash pickle . . .")
+                    # move_imgs = db_org.get_training_set(args.organize, emotion, training_emotion_hash)
+                    # print("Total emotion images moved: ", move_imgs)
+                    # total_moved += move_imgs
 
-    if not os.path.exists(training_hash):
-        print("\nbuilding training hash . . .")
-        training_emotion_hash = db_org.get_emotion_folders(images_path, csv_training_file)
-        training_emotion_hash_pickle = open(training_hash, 'wb')
-        pickle.dump(training_emotion_hash, training_emotion_hash_pickle)
-        training_emotion_hash_pickle.close()
-    else:
-        print("\nloading training hash pickle. . .")
-        training_emotion_hash_pickle = open(training_hash, 'rb')
-        training_emotion_hash = pickle.load(training_emotion_hash_pickle)
+                elif(args.organize == "validation_set"):
+                    validation_emotion_hash_pickle = open(validation_hash, 'rb')
+                    # validation_emotion_hash = pickle.load(validation_emotion_hash_pickle)
+                    emotion_hash = pickle.load(validation_emotion_hash_pickle)
+                    print("\nloaded validation hash pickle . . .")
+                    # move_imgs = db_org.get_training_set(args.organize, emotion, validation_emotion_hash)
+                    # print("Total emotion images moved: ", move_imgs)
+                    # total_moved += move_imgs
+                move_imgs = db_org.get_training_set(args.organize, emotion, emotion_hash)
+                print("Total emotion images moved: ", move_imgs)
+                total_moved += move_imgs
 
-    # for key, val in training_emotion_hash.items():
-        # print("\n\nkey: \n", key)
-        # print("emotion img list:\n", val)
-
-    num_total_training_imgs = 0
-    for key, val in training_emotion_hash.items():
-        print("\n\nemotion: ", key)
-        print("image list len: ", len(val))
-        num_total_training_imgs += len(val)
-
-    print("Total num training images: ", num_total_training_imgs)
-
-    num_total_training_imgs = 0
-    for key, val in validation_emotion_hash.items():
-        print("\n\nemotion: ", key)
-        print("image list len: ", len(val))
-        num_total_training_imgs += len(val)
-
+            print("\n\nTotal images moved: ", total_moved)
 
     end = datetime.datetime.now()
     elapsed = end - start
-
-    # print("emotion_hash = stopped at end of file . . .")
-    # print("But did not load training_hash into emotion_hash . . .")
-
 
     print("\n\nstart time: ", start)
     print("end time: ", end)
