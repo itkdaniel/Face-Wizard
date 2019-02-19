@@ -1,7 +1,7 @@
 # Face Wizard
 A CMPS140 Artificial Intelligence Project
 # Getting Started
-To get the datasets refer to **get_dataset_README**.  
+To get the datasets refer to the [Datasets](#Datasets) section of this document.  
 
 ## Affectnet Dataset
 ### Unzip the dataset
@@ -26,6 +26,7 @@ The above commands will setup the training and validation set images into their 
 **anger, contempt, disgust, fear, happiness, neutral, no-face, none, sadness, surprise, uncertain**
 
 ## Cohn-Kanade Dataset
+To get the dataset refer to **get_ck_dataset.readme**.
 ### Unzip the dataset
 Download the Emotion_labels, extended-cohn-kanade-images, and FACS_labels zipped archives from the **CK+** directory.    
 
