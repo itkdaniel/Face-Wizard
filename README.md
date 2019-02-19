@@ -23,7 +23,7 @@ Uncompress the zip file and put the Manually_Annotated folder, training.csv file
 
 The above commands will setup the training and validation set images into their corresponding folders with 11 emotions:
 
-**anger, contempt, disgust, fear, happiness, neutral, no-face, none, sadness, surprise, uncertain**
+ > **anger, contempt, disgust, fear, happiness, neutral, no-face, none, sadness, surprise, uncertain**
 
 ## Cohn-Kanade Dataset
 To get the dataset refer to **get_ck_dataset.readme**.
@@ -41,7 +41,7 @@ To organize the dataset into emotion categories:
 
 This will organize and sort images from the dataset into separate folders by emotions:
 
-**neutral, anger, contempt, disgust, fear, happy, surprise**
+> **neutral, anger, contempt, disgust, fear, happy, surprise**
 
 ## Contributors
 Daniel Truong  
