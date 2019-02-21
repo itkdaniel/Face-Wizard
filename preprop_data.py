@@ -88,6 +88,139 @@ def process_data(path, emotion):
         print()
     return data, labels
 
+# emotions = ["angerX", "contemptX", "disgustX", "fearX", "happiness",
+# "neutral", "no-face", "none", "sadness+25459", "surprise+", "uncertain+"]
+"""Emotions too large to train at once must split into batches of ~25k:
+    {happiness, neutral, none, no-face,}"""
+def process_large_data(path, emotion):
+    try:
+        data = []
+        labels = []
+
+        processed_path = "processed/{}".format(emotion)
+        emotion_path = "{}/{}".format(path, emotion)
+
+        # create directory to hold processed imgs if not exists already
+        if not os.path.exists(processed_path):
+            os.makedirs(processed_path)
+
+
+        print("Processing ", path, "...")
+
+        # GET LIST OF EMOTION IMAGES
+        emotion_imgs = os.listdir(emotion_path)
+
+
+        for i in range(0, 450):
+            # print(emotion_imgs[i])
+            # RESIZE IMAGE AND CONVERT IMG TO ARRAY OF PIXELS
+            # APPEND IMAGE(PIXEL ARRAY) TO DATA[] AND CORRESPONDING LABEL TO LABELS[]
+            # PATH TO TRAINING_SET_IMGS: training_set_imgs/{emotion}/filename
+            img_src = "{}/{}".format(emotion_path, emotion_imgs[i])
+            # img_dest = "{}/{}".format(processed_path, emotion_imgs[i])
+
+            # print("\n\nimg_src: ", img_src)
+            # print("img_dest: ", img_dest)
+
+            image = cv2.imread(img_src)
+            image = cv2.resize(image, (img_width, img_height))
+            image = img_to_array(image)
+            data.append(image)
+
+            labels.append(emotion)
+
+            # TODO: MOVE IMAGE TO PROCESSED DIRECTORY. (copy for now...)
+            # if ((not Path(img_dest).exists()) and (os.path.exists(img_src))):
+                # print("Moving ", emotion_imgs[i])
+    except Exception as e:
+        print("Error processing %s data" % path)
+        print(e)
+        print()
+    return data, labels
+
+# emotions = ["angerX", "contemptX", "disgustX", "fearX", "happiness",
+# "neutral", "no-face", "none", "sadness+25459", "surprise+", "uncertain+"]
+"""Emotions too large to train at once must split into batches of ~25k:
+    {happiness, neutral, none, no-face}"""
+def process_fixed_data(path, batch_size):
+    try:
+        data = []
+        labels = []
+
+        emotions = ["anger", "contempt", "disgust", "fear", "happiness",
+                  "neutral", "no-face", "none", "sadness", "surprise", "uncertain"]
+
+        random_seed_fn = "process_seed.pickle"
+        seed_val = -1
+
+        # Read previous seed if exists
+        if (os.path.exists(random_seed_fn)):
+            random_seed_pickle = open(random_seed_fn, 'rb')
+            prev_seed_val = pickle.load(random_seed_pickle)
+            prev_seed_val += 1
+            random_seed_pickle.close()
+        else:
+            seed_val += 1
+
+
+        # Randomize and process all images
+        # random.seed()
+        random.shuffle(emotions)
+
+        print("\nProcessing data...")
+
+        for emotion in emotions:
+
+            # processed_path = "processed/{}".format(emotion)
+            emotion_path = "{}/{}".format(path, emotion)
+
+            # create directory to hold processed imgs if not exists already
+            # if not os.path.exists(processed_path):
+                # os.makedirs(processed_path)
+
+            print("\nProcessing %s: %s" % path, emotion)
+
+            # GET LIST OF EMOTION IMAGES
+            emotion_imgs = os.listdir(emotion_path)
+
+            # Shuffle data
+            random.seed(seed_val)
+            random.shuffle(emotion_imgs)
+
+
+            for i in range(0, batch_size):
+                # print(emotion_imgs[i])
+                # RESIZE IMAGE AND CONVERT IMG TO ARRAY OF PIXELS
+                # APPEND IMAGE(PIXEL ARRAY) TO DATA[] AND CORRESPONDING LABEL TO LABELS[]
+                # PATH TO TRAINING_SET_IMGS: training_set_imgs/{emotion}/filename
+                img_src = "{}/{}".format(emotion_path, emotion_imgs[i])
+                # img_dest = "{}/{}".format(processed_path, emotion_imgs[i])
+
+                # print("\n\nimg_src: ", img_src)
+                # print("img_dest: ", img_dest)
+
+                image = cv2.imread(img_src)
+                image = cv2.resize(image, (img_width, img_height))
+                image = img_to_array(image)
+                data.append(image)
+
+                labels.append(emotion)
+
+                # TODO: MOVE IMAGE TO PROCESSED DIRECTORY. (copy for now...)
+                # if ((not Path(img_dest).exists()) and (os.path.exists(img_src))):
+                    # print("Moving ", emotion_imgs[i])
+
+            # Save the current random_seed val
+            random_seed_pickle = open(random_seed_fn, 'wb')
+            pickle.dump(seed_val, random_seed_pickle)
+            random_seed_pickle.close()
+
+    except Exception as e:
+        print("Error processing %s data" % path)
+        print(e)
+        print()
+    return data, labels
+
 # Convert Data/Label Keras Arrays to Numpy Arrays
 # def convert_to_np_arrays(data, labels):
 def convert_to_np_arrays(image_set):
@@ -141,55 +274,20 @@ def convert_to_np_arrays(image_set):
 
     return data, labels
 
-# emotions = ["angerX", "contemptX", "disgustX", "fearX", "happiness",
-# "neutral", "no-face", "none", "sadness+25459", "surprise+", "uncertain+"]
-"""Emotions too large to train at once must split into batches of ~25k:
-    {happiness, neutral, none, no-face,}"""
-def process_large_data(path, emotion):
-    try:
-        data = []
-        labels = []
+def create_fixed_shuffle(path, batch_size):
+    """
+    type: path string: (training_set, validation_set)
+    type batch_size int: num of images for each emotion set
+    """
+    data_pickle_fn = "{}_data_pickle_{}".format(path, batch_size)
+    label_pickle_fn = "{}_label_pickle_{}".format(path, batch_size)
 
-        processed_path = "processed/{}".format(emotion)
-        emotion_path = "{}/{}".format(path, emotion)
-
-        # create directory to hold processed imgs if not exists already
-        if not os.path.exists(processed_path):
-            os.makedirs(processed_path)
+    data, labels = process_fixed_data()
 
 
-        print("Processing ", path, "...")
-
-        # GET LIST OF EMOTION IMAGES
-        emotion_imgs = os.listdir(emotion_path)
+    pass
 
 
-        for i in range(0, 450):
-            # print(emotion_imgs[i])
-            # RESIZE IMAGE AND CONVERT IMG TO ARRAY OF PIXELS
-            # APPEND IMAGE(PIXEL ARRAY) TO DATA[] AND CORRESPONDING LABEL TO LABELS[]
-            # PATH TO TRAINING_SET_IMGS: training_set_imgs/{emotion}/filename
-            img_src = "{}/{}".format(emotion_path, emotion_imgs[i])
-            # img_dest = "{}/{}".format(processed_path, emotion_imgs[i])
-
-            # print("\n\nimg_src: ", img_src)
-            # print("img_dest: ", img_dest)
-
-            image = cv2.imread(img_src)
-            image = cv2.resize(image, (img_width, img_height))
-            image = img_to_array(image)
-            data.append(image)
-
-            labels.append(emotion)
-
-            # TODO: MOVE IMAGE TO PROCESSED DIRECTORY. (copy for now...)
-            # if ((not Path(img_dest).exists()) and (os.path.exists(img_src))):
-                # print("Moving ", emotion_imgs[i])
-    except Exception as e:
-        print("Error processing %s data" % path)
-        print(e)
-        print()
-    return data, labels
 
 """ ADDS INITIAL DATA/LABELS TO PICKLES
     ONLY RUN IF FIRST TIME CREATING PICKLES"""
