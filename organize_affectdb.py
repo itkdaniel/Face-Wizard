@@ -153,8 +153,8 @@ if __name__ == "__main__":
     training_hash = "training_emotion_hash_pickle"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-b", "--build_hash", help="build train/valid {emotion:file} hash", action="store_true")
-    parser.add_argument("-o", "--organize", help="organize affectnet dataset: training_set_imgs/validation_set_imgs")
+    parser.add_argument("-b", "--build_hash", help="build train/valid {emotion:file} hash", action="store_true", required=True)
+    parser.add_argument("-o", "--organize", help="organize affectnet dataset: training_set_imgs/validation_set_imgs", required=True)
     # parser.add_argument()
     args = parser.parse_args()
     print("processing dataset . . .")
@@ -163,8 +163,11 @@ if __name__ == "__main__":
     # print(start)
     db_org = DataOrganizer()
 
-    if (len(sys.argv) <= 1):
-        print("** Error: Required Arguments: {-b:--buildhash} or {-o:--organize}")
+    # Alternate method to require command line arguments
+    # if (len(sys.argv) <= 1):
+    #     parser.print_usage()
+    #     sys.exit()
+
     # Uses pickle to save emotion_hash
     #       so we don't need to compute the hash everytime
     # emotion_hash = db_org.get_emotion_folders(images_path, csv_training_file)
@@ -222,6 +225,8 @@ if __name__ == "__main__":
             for emotion in emotions:
                 print("\norganizing emotion:", emotion)
                 # move_imgs = db_org.get_training_set(validation_path, emotion, emotion_hash)
+                # THE FOLLOWING IF CONDITION IS INEFFICIENT
+                # DUE TO REPETITIVE CALLS TO "pickle.load"
                 if (args.organize == "training_set"):
                     training_emotion_hash_pickle = open(training_hash, 'rb')
                     # training_emotion_hash = pickle.load(training_emotion_hash_pickle)
@@ -236,6 +241,7 @@ if __name__ == "__main__":
                     # validation_emotion_hash = pickle.load(validation_emotion_hash_pickle)
                     emotion_hash = pickle.load(validation_emotion_hash_pickle)
                     print("\nloaded validation hash pickle . . .")
+
                     # move_imgs = db_org.get_training_set(args.organize, emotion, validation_emotion_hash)
                     # print("Total emotion images moved: ", move_imgs)
                     # total_moved += move_imgs

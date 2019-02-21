@@ -1,0 +1,9 @@
+Dependencies:
+pip install -U
+    keras,
+    tensorflow,
+    scikit-learn,
+    numpy,
+    opencv-python,
+    imutils,
+    matplotlib

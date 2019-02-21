@@ -1,6 +1,33 @@
+# Initial setup
 0. Uncompress the Manually_Annotated and Manually_Annotated_file_lists zip files
 1. Put Manually_Annotated folder into main directory
 2. Put training and validation csv files into main directory
+
+# Organizing the dataset into training and validation set.
+# Each set consists of 11 folders named by emotion
 3. Run python organize_affectdb.py -b to build {emotion:List[images]} hash pickle files
 4. Run python organize_affectdb.py -o validation_set to organize validation set images
 5. Run python organize_affectdb.py -o training_set to organize training set images
+
+# Preprocessing the training and validation sets
+    # Validation Set
+    6. Run python --create validation_set --emotion anger
+    7. Run python --append validation_set validation_set_data_pickle validation_set_label_pickle --emotion contempt
+    8. Run python --append validation_set validation_set_data_pickle validation_set_label_pickle --emotion disgust
+    9. Repeat the --append command for the remaining emotions
+
+    # Training Set
+    10. Run python --create training_set --emotion anger
+    11. Run python --append training_set training_set_data_pickle training_set_label_pickle --contempt
+    12. Run python --append training_set training_set_data_pickle training_set_label_pickle --disgust
+    13. Run python --appendlarge training_set training_set_data_pickle training_set_label_pickle --happiness
+    14. Repeat the --appendlarge command for the remaining emotions
+
+    # To chunk and process data that is too large
+    # Takes batches of 5k-10k
+    15. python preprop_data.py --appendlarge training_set training_set_data_pickle training_set_label_pickle --emotion happiness
+
+# To load pickle files
+16. python preprop_data.py --load validation_set_data_pickle validation_set_label_pickle training_set_data_pickle training_set_label_pickle
+
+# Convert preprocessed
