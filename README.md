@@ -25,6 +25,15 @@ The above commands will setup the training and validation set images into their 
 
  > **anger, contempt, disgust, fear, happiness, neutral, no-face, none, sadness, surprise, uncertain**
  
+### Quick build
+**Instead of pre-processing the data manually**.  
+This will avoid having to manually preprocess each emotion and will automatically quickly preprocess a fixed amount of data, build, and train the model.  
+`$python train_model.py --fast`
+
+**Otherwise:**
+
+Follow the [instructions(pre-process the data)](#Pre-process the data) below to manually preprocess, build, and train the model.
+ 
 ### Pre-process the data
 #### Validation Set
 1. `$python --create validation_set --emotion anger`
@@ -40,9 +49,9 @@ The above commands will setup the training and validation set images into their 
 ### Load and read data size metrics
 1. `python preprop_data.py --load validation_set_data_pickle validation_set_label_pickle training_set_data_pickle training_set_label_pickle`
 
-### Train the model
+### Train the model after manual preprocessing (the long way)
 **Currently**:  
-1. `$python train_model.py`
+1. `$python train_model.py --long`
 
 ## Cohn-Kanade Dataset
 To get the dataset refer to **get_ck_dataset.readme**.
