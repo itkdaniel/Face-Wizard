@@ -32,7 +32,7 @@ This will avoid having to manually preprocess each emotion and will automaticall
 
 **Otherwise:**
 
-Follow the [instructions(pre-process the data)](#Pre-process the data) below to manually preprocess, build, and train the model.
+Follow the [instructions](#Pre-process the data) below to manually preprocess, build, and train the model.
  
 ### Pre-process the data
 #### Validation Set
