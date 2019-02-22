@@ -9,6 +9,9 @@
 4. Run python organize_affectdb.py -o validation_set to organize validation set images
 5. Run python organize_affectdb.py -o training_set to organize training set images
 
+# Quick setup, train, and build model
+6. Run python train_model.py --fast
+
 # Preprocessing the training and validation sets
     # Validation Set
     6. Run python --create validation_set --emotion anger
@@ -24,10 +27,11 @@
     14. Repeat the --appendlarge command for the remaining emotions
 
     # To chunk and process data that is too large
-    # Takes batches of 5k-10k
+    # Takes batches of 150-450
     15. python preprop_data.py --appendlarge training_set training_set_data_pickle training_set_label_pickle --emotion happiness
 
 # To load pickle files
 16. python preprop_data.py --load validation_set_data_pickle validation_set_label_pickle training_set_data_pickle training_set_label_pickle
 
-# Convert preprocessed
+# To build and train model the long way (after preprocessing the training and validation sets manually)
+18. Run python train_model.py --long

@@ -97,6 +97,8 @@ def process_large_data(path, emotion):
         data = []
         labels = []
 
+        batch_size = 450
+
         processed_path = "processed/{}".format(emotion)
         emotion_path = "{}/{}".format(path, emotion)
 
@@ -111,7 +113,7 @@ def process_large_data(path, emotion):
         emotion_imgs = os.listdir(emotion_path)
 
 
-        for i in range(0, 450):
+        for i in range(0, batch_size):
             # print(emotion_imgs[i])
             # RESIZE IMAGE AND CONVERT IMG TO ARRAY OF PIXELS
             # APPEND IMAGE(PIXEL ARRAY) TO DATA[] AND CORRESPONDING LABEL TO LABELS[]
@@ -147,6 +149,9 @@ def process_fixed_data(path, batch_size):
         data = []
         labels = []
 
+        img_width = 256
+        img_height = 256
+
         emotions = ["anger", "contempt", "disgust", "fear", "happiness",
                   "neutral", "no-face", "none", "sadness", "surprise", "uncertain"]
 
@@ -154,13 +159,13 @@ def process_fixed_data(path, batch_size):
         seed_val = -1
 
         # Read previous seed if exists
-        if (os.path.exists(random_seed_fn)):
-            random_seed_pickle = open(random_seed_fn, 'rb')
-            prev_seed_val = pickle.load(random_seed_pickle)
-            prev_seed_val += 1
-            random_seed_pickle.close()
-        else:
-            seed_val += 1
+        # if (os.path.exists(random_seed_fn)):
+        #     random_seed_pickle = open(random_seed_fn, 'rb')
+        #     prev_seed_val = pickle.load(random_seed_pickle)
+        #     prev_seed_val += 1
+        #     random_seed_pickle.close()
+        # else:
+        #     seed_val += 1
 
 
         # Randomize and process all images
@@ -178,7 +183,7 @@ def process_fixed_data(path, batch_size):
             # if not os.path.exists(processed_path):
                 # os.makedirs(processed_path)
 
-            print("\nProcessing %s: %s" % path, emotion)
+            print("\nProcessing %s: %s" % (path, emotion))
 
             # GET LIST OF EMOTION IMAGES
             emotion_imgs = os.listdir(emotion_path)
@@ -187,7 +192,7 @@ def process_fixed_data(path, batch_size):
             random.seed(seed_val)
             random.shuffle(emotion_imgs)
 
-
+            # Resize and convert images to arrays
             for i in range(0, batch_size):
                 # print(emotion_imgs[i])
                 # RESIZE IMAGE AND CONVERT IMG TO ARRAY OF PIXELS
@@ -205,73 +210,27 @@ def process_fixed_data(path, batch_size):
                 data.append(image)
 
                 labels.append(emotion)
+        data = np.array(data, dtype="float") / 255.0
+        labels = np.array(labels)
+        print("[INFO] data matrix: {:.2f}MB".format(data.nbytes / (1024*1000.0)))
+
+        # Binarize the labels
+        label_binner = preprocessing.LabelBinarizer()
+        labels = label_binner.fit_transform(labels)
 
                 # TODO: MOVE IMAGE TO PROCESSED DIRECTORY. (copy for now...)
                 # if ((not Path(img_dest).exists()) and (os.path.exists(img_src))):
                     # print("Moving ", emotion_imgs[i])
 
-            # Save the current random_seed val
-            random_seed_pickle = open(random_seed_fn, 'wb')
-            pickle.dump(seed_val, random_seed_pickle)
-            random_seed_pickle.close()
+        # Save the current random_seed val
+        # random_seed_pickle = open(random_seed_fn, 'wb')
+        # pickle.dump(seed_val, random_seed_pickle)
+        # random_seed_pickle.close()
 
     except Exception as e:
         print("Error processing %s data" % path)
         print(e)
         print()
-    return data, labels
-
-# Convert Data/Label Keras Arrays to Numpy Arrays
-# def convert_to_np_arrays(data, labels):
-def convert_to_np_arrays(image_set):
-    """
-    type image_set: String : image set to convert (training_set, validation_set)
-    type data: List[keras_arrays]
-    type: labels: List[keras_arrays]
-    rtype: None
-    """
-
-    # Define pickle file names using the specified image set (training_set, validation_set)
-    data_pickle_fn = "{}_data_pickle".format(image_set)
-    label_pickle_fn = "{}_label_pickle".format(image_set)
-
-    # Define np array pickle file names
-    data_np_pickle_fn = "{}_data_np_pickle".format(image_set)
-    label_np_pickle_fn = "{}_label_np_pickle".format(image_set)
-
-    # Load, convert, and save the data pickle
-    print("\nConverting processed data(images) to np array...")
-    data_pickle_file = open(data_pickle_fn, 'rb')
-    data_pickle = pickle.load(data_pickle_file)
-    data_pickle_file.close()
-
-    data = np.array(data_pickle, dtype="float") / 255.0
-
-    # Save to pickle file
-    print("\n Saving to pickle file...")
-    # data_pickle_file = open(data_np_pickle_fn, 'wb')
-    # pickle.dump(data, data_pickle_file)
-    # data_pickle_file.close()
-    # del data
-
-
-    # Load, convert, and save the label pickle
-    print("\nConverting processed labels to np array...")
-    label_pickle_file = open(label_pickle_fn, 'rb')
-    label_pickle = pickle.load(label_pickle_file)
-    label_pickle_file.close()
-
-    labels = np.array(label_pickle)
-    binarizer = preprocessing.LabelBinarizer()
-    labels = binarizer.fit_transform(labels)
-
-    # Save to pickle file
-    print("Saving to pickle file...")
-    # label_pickle_file = open(label_np_pickle_fn, 'wb')
-    # pickle.dump(labels, label_pickle_file)
-    # label_pickle_file.close()
-    # del labels
-
     return data, labels
 
 def create_fixed_shuffle(path, batch_size):
@@ -475,6 +434,59 @@ def append_large_to_pickle(path, data_pickle, label_pickle, emotion):
 
 
     return True
+
+# Convert Data/Label Keras Arrays to Numpy Arrays
+# def convert_to_np_arrays(data, labels):
+def convert_to_np_arrays(image_set):
+    """
+    type image_set: String : image set to convert (training_set, validation_set)
+    type data: List[keras_arrays]
+    type: labels: List[keras_arrays]
+    rtype: None
+    """
+
+    # Define pickle file names using the specified image set (training_set, validation_set)
+    data_pickle_fn = "{}_data_pickle".format(image_set)
+    label_pickle_fn = "{}_label_pickle".format(image_set)
+
+    # Define np array pickle file names
+    data_np_pickle_fn = "{}_data_np_pickle".format(image_set)
+    label_np_pickle_fn = "{}_label_np_pickle".format(image_set)
+
+    # Load, convert, and save the data pickle
+    print("\nConverting processed data(images) to np array...")
+    data_pickle_file = open(data_pickle_fn, 'rb')
+    data_pickle = pickle.load(data_pickle_file)
+    data_pickle_file.close()
+
+    data = np.array(data_pickle, dtype="float") / 255.0
+
+    # Save to pickle file
+    print("\n Saving to pickle file...")
+    # data_pickle_file = open(data_np_pickle_fn, 'wb')
+    # pickle.dump(data, data_pickle_file)
+    # data_pickle_file.close()
+    # del data
+
+
+    # Load, convert, and save the label pickle
+    print("\nConverting processed labels to np array...")
+    label_pickle_file = open(label_pickle_fn, 'rb')
+    label_pickle = pickle.load(label_pickle_file)
+    label_pickle_file.close()
+
+    labels = np.array(label_pickle)
+    binarizer = preprocessing.LabelBinarizer()
+    labels = binarizer.fit_transform(labels)
+
+    # Save to pickle file
+    print("Saving to pickle file...")
+    # label_pickle_file = open(label_np_pickle_fn, 'wb')
+    # pickle.dump(labels, label_pickle_file)
+    # label_pickle_file.close()
+    # del labels
+
+    return data, labels
 
 """
 # Emotions used to prepropcess data

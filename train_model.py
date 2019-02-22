@@ -3,6 +3,9 @@ from keras.utils.np_utils import to_categorical
 from sklearn import preprocessing
 from base_model import BaseModel
 from preprop_data import convert_to_np_arrays
+from preprop_data import process_fixed_data
+import argparse
+import sys
 
 import pickle
 
@@ -54,7 +57,16 @@ if __name__ == "__main__":
     height = 256
     depth = 3
     classes = 11
-    bs = 25
+    bs = 50
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--fast", help="Run this command if want auto quick preprocess and build model", action='store_true')
+    parser.add_argument("--long", help="Run this command if preprocessed the data manually using --create(batch) and --append(long)", action='store_true')
+    args = parser.parse_args()
+
+    if (len(sys.argv) <= 1):
+        parser.print_usage()
+        sys.exit()
 
     trainer = TrainModel()
 
@@ -65,8 +77,21 @@ if __name__ == "__main__":
     # train_data, train_labels = trainer.load_train_pickles()
     # valid_data, valid_labels = trainer.load_valid_pickles()
 
-    train_data, train_labels = convert_to_np_arrays("training_set")
-    valid_data, valid_labels = convert_to_np_arrays("validation_set")
+    # train_data, train_labels = convert_to_np_arrays("training_set")
+    # valid_data, valid_labels = convert_to_np_arrays("validation_set")
+
+
+    if (args.fast):
+        valid_data, valid_labels = process_fixed_data("validation_set", 150)
+        train_data, train_labels = process_fixed_data("training_set", 450)
+    elif(args.long):
+        train_data, train_labels = convert_to_np_arrays("training_set")
+        valid_data, valid_labels = convert_to_np_arrays("validation_set")
+    else:
+        print("Error: Specify a valid flag(--fast, --long)")
+        parser.print_usage()
+        sys.exit()
+
 
 
     # encode labels
@@ -97,7 +122,7 @@ if __name__ == "__main__":
                     # horizontal_flip=True, fill_mode="nearest")
     # training the model !!
     print("training model...")
-    model.fit_generator(train_batches, steps_per_epoch=len(train_data)//bs, validation_data=(valid_data, valid_labels), epochs=25, verbose=2)
+    model.fit_generator(train_batches, steps_per_epoch=len(train_data)//bs, validation_data=(valid_data, valid_labels), epochs=100, verbose=2)
     # model.fit_generator(train_batches, steps_per_epoch=1111, validation_data=valid_batches, validation_steps=100, epochs=25, verbose=2)
     # model.fit_generator(generator=(train_data, train_labels), steps_per_epoch=5, validation_data=(valid_data,valid_labels), validation_steps=3, epochs=25, verbose=2)
 
