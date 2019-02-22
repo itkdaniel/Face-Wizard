@@ -1,3 +1,5 @@
+[TOC]
+
 # Face Wizard
 A CMPS140 Artificial Intelligence Project
 # Getting Started
@@ -24,6 +26,25 @@ Uncompress the zip files and put the Manually_Annotated folder, training.csv fil
 The above commands will setup the training and validation set images into their corresponding folders with 11 emotions:
 
  > **anger, contempt, disgust, fear, happiness, neutral, no-face, none, sadness, surprise, uncertain**
+ 
+### Pre-process the data
+#### Validation Set
+1. `$python --create validation_set --emotion anger`
+2. `$python --append validation_set validation_set_data_pickle validation_set_label_pickle --emotion contempt`
+3. Repeat the --append command for the remaining emotions
+
+#### Training Set
+1. `$python --createbatch training_set --emotion anger`
+2. `$python --appendlarge training_set training_set_data_pickle training_set_label_pickle --contempt`
+3. Repeat the --appendlarge command for the remaining emotions  
+ **Change the `batch_size` variable in preprop_data.py to control how many images get processed for an emotion**
+
+### Load and read data size metrics
+1. python preprop_data.py --load validation_set_data_pickle validation_set_label_pickle training_set_data_pickle training_set_label_pickle
+
+### Train the model
+**Currently**:  
+1. `$python train_model.py`
 
 ## Cohn-Kanade Dataset
 To get the dataset refer to **get_ck_dataset.readme**.
