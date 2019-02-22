@@ -1,5 +1,3 @@
-[TOC]
-
 # Face Wizard
 A CMPS140 Artificial Intelligence Project
 # Getting Started
@@ -40,7 +38,7 @@ The above commands will setup the training and validation set images into their 
  **Change the `batch_size` variable in preprop_data.py to control how many images get processed for an emotion**
 
 ### Load and read data size metrics
-1. python preprop_data.py --load validation_set_data_pickle validation_set_label_pickle training_set_data_pickle training_set_label_pickle
+1. `python preprop_data.py --load validation_set_data_pickle validation_set_label_pickle training_set_data_pickle training_set_label_pickle`
 
 ### Train the model
 **Currently**:  
