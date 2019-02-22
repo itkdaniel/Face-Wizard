@@ -25,16 +25,16 @@ The above commands will setup the training and validation set images into their 
 
  > **anger, contempt, disgust, fear, happiness, neutral, no-face, none, sadness, surprise, uncertain**
  
-### Quick build
+### Auto-Quick-Build
 **Instead of pre-processing the data manually**.  
 This will avoid having to manually preprocess each emotion and will automatically quickly preprocess a fixed amount of data, build, and train the model.  
 `$python train_model.py --fast`
 
 **Otherwise:**
 
-Follow the [instructions](#Pre-process the data) below to manually preprocess, build, and train the model.
+Follow the [instructions](#Manual-Preprocessing) below to manually preprocess, build, and train the model.
  
-### Pre-process the data
+### Manual-Preprocessing-Build
 #### Validation Set
 1. `$python --create validation_set --emotion anger`
 2. `$python --append validation_set validation_set_data_pickle validation_set_label_pickle --emotion contempt`
