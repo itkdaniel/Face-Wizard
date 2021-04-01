@@ -1,5 +1,5 @@
 # Face Wizard
-A CMPS140 Artificial Intelligence Project
+An Artificial Intelligence Project
 # Getting Started
 To get the datasets refer to the [Datasets](#Datasets) section of this document.  
 
